@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" th:href="@{bootstrap.css}" />
+</head>
+<body>
+
+<a href="/logout">logout</a>
+
+
+<div th:text="${#authentication.name}">
+        The value of the "name" property of the authentication object should appear here.
+    </div>
+<!-- on peut utiliser ça aussi  sec:authorize="hasRole('ROLE_ADMIN')" -->
+<div class="momodivadd" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+<form th:action="@{/add}" th:object="${produit}" enctype="multipart/form-data"  method="post">
+<table>
+<tr>
+<td>
+<label>designation:</label></td>
+<td>
+<input type="text" th:field="*{designation}" />
+</td>
+</tr>
+<tr>
+<td>
+<label>prix:</label></td>
+<td>
+<input type="text" th:field="*{prix}" />
+</td>
+<td th:if="${#fields.hasErrors('prix')}" th:errors="*{prix}">prix Error</td>
+</tr>
+<tr>
+<td>
+<label>photo:</label></td>
+<td>
+<input type="file" name="file" />
+</td>
+</tr>
+<tr>
+<td>
+<input type="submit" value="add"/>
+</td>
+</tr>
+</table>
+
+</form>
+
+</div>
+
+
+<div class="container">
+<table class="table table-striped">
+<thead>
+<tr>
+<td>id</td><td>designation</td><td>prix</td>
+</tr>
+</thead>
+<tbody>
+<tr th:each="produit : ${lesproduits}">
+    <td th:text="${produit.id}"></td>
+    <td th:text="${produit.designation}"></td>
+    <td th:text="${produit.prix}"></td>
+    <td><img alt="photo" th:src="@{'photoprod?idphoto='+${produit.id}}"/></td> 
+    <td><a th:href="@{'/suup?idp='+${produit.id}}">supprimer</a></td>
+    <td><a th:href="@{'/edit?idp='+${produit.id}}">editer</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</body>
+</html>
